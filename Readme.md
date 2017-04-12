@@ -14,6 +14,10 @@ There is encrypted chat between the clients when they are in game, that goes thr
 
 Client can challenge other clients that are currently in loby and not busy playing with other players
 
+**Requirements:**
+1. Java SE 7 update 6 or Above
+2. MySql Server
+
 ## Technologies used:
 - [Java](https://java.com/en/)
 - [JavaFx](http://docs.oracle.com/javafx/2/overview/jfxpub-overview.htm)
