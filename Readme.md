@@ -1,4 +1,4 @@
-#TicTacToe
+# TicTacToe
 
 **Brief information:**
 
@@ -14,7 +14,7 @@ There is encrypted chat between the clients when they are in game, that goes thr
 
 Client can challenge other clients that are currently in loby and not busy playing with other players
 
-##Technologies used:
+## Technologies used:
 - [Java](https://java.com/en/)
 - [JavaFx](http://docs.oracle.com/javafx/2/overview/jfxpub-overview.htm)
 - [Java Sockets](http://www.oracle.com/technetwork/java/socket-140484.html)
@@ -24,5 +24,5 @@ Client can challenge other clients that are currently in loby and not busy playi
 - [Scene Builder](http://gluonhq.com/products/scene-builder/)
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-##Design Patterns used:
+## Design Patterns used:
 - [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
