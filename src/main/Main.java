@@ -27,6 +27,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        Window mainWindow = new Window("TicTacToe - Main menu", false);
+        mainWindow.setFXML(getClass().getResource("/view/MainMenu.fxml"));
+        mainWindow.show();
     }
 }

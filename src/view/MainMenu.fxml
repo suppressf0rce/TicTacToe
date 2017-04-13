@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="control.MainMenuControl"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-</AnchorPane>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0"
+            prefWidth="513.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="control.MainMenu">
+   <left>
+      <HBox prefHeight="477.0" prefWidth="110.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets/>
+         </BorderPane.margin>
+         <children>
+            <VBox alignment="CENTER_LEFT" prefHeight="477.0" prefWidth="110.0" spacing="50.0">
+               <children>
+                  <RadioButton fx:id="rbClient" mnemonicParsing="false" onAction="#changeToClientConfig" text="Client">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroup"/>
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="rbServer" mnemonicParsing="false" onAction="#changeToServerConfig" text="Server"
+                               toggleGroup="$toggleGroup"/>
+               </children>
+               <padding>
+                  <Insets left="20.0"/>
+               </padding>
+               <opaqueInsets>
+                  <Insets/>
+               </opaqueInsets>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0"/>
+         </children>
+      </HBox>
+   </left>
+   <top>
+      <VBox alignment="TOP_CENTER" prefHeight="83.0" prefWidth="513.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Welcome to the TicTacToe Game!">
+               <font>
+                  <Font name="System Bold" size="16.0"/>
+               </font>
+            </Label>
+            <Label text="Please select whether you want to join as client, &#10;or host your own server. Good luck!"
+                   textAlignment="CENTER" wrapText="true">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="5.0"/>
+               </VBox.margin>
+            </Label>
+            <Separator prefWidth="200.0"/>
+         </children>
+         <padding>
+            <Insets top="10.0"/>
+         </padding>
+      </VBox>
+   </top>
+</BorderPane>

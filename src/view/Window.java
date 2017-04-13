@@ -100,7 +100,7 @@ public class Window extends Stage {
 
             //Set size to match scene
             this.sizeToScene();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Could not load FXML file: " + e.getMessage());
         }
     }
