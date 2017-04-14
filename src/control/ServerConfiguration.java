@@ -1,8 +1,10 @@
 package control;
 
 import control.database.DBBroker;
+import control.database.TextFieldErrorFocusListener;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -24,7 +26,7 @@ public class ServerConfiguration {
      * References to the FXML file Text Fields
      */
     @FXML
-    private TextField tfServerHost, tfServerPort, tfDatabasePort, tfDatabaseHost, tfDatabaseName, tfUsername;
+    private TextField tfServerName, tfServerHost, tfServerPort, tfDatabasePort, tfDatabaseHost, tfDatabaseName, tfUsername;
 
     /**
      * References to the FXML file Buttons
@@ -47,6 +49,17 @@ public class ServerConfiguration {
 
     //Methods
     //------------------------------------------------------------------------------------------------------------------
+    @FXML
+    public void initialize() {
+        //Adding required text fields listeners
+        tfServerName.focusedProperty().addListener(new TextFieldErrorFocusListener(tfServerName));
+        tfServerHost.focusedProperty().addListener(new TextFieldErrorFocusListener(tfServerHost));
+        tfServerPort.focusedProperty().addListener(new TextFieldErrorFocusListener(tfServerPort));
+        tfDatabaseName.focusedProperty().addListener(new TextFieldErrorFocusListener(tfDatabaseName));
+        tfDatabaseHost.focusedProperty().addListener(new TextFieldErrorFocusListener(tfDatabaseHost));
+        tfDatabasePort.focusedProperty().addListener(new TextFieldErrorFocusListener(tfDatabasePort));
+        tfUsername.focusedProperty().addListener(new TextFieldErrorFocusListener(tfUsername));
+    }
     /**
      * This methods manages the test database connection action on the button
      */

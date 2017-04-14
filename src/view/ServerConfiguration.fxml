@@ -11,31 +11,37 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0" prefWidth="371.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.ServerConfiguration">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+          prefWidth="375.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/8.0.111"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.ServerConfiguration">
     <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label text="Host:">
+        <Label text="Host:" GridPane.rowIndex="1">
             <padding>
                 <Insets right="10.0" />
             </padding>
         </Label>
-        <TextField fx:id="tfServerHost" editable="false" promptText="Please enter server host address" text="localhost" GridPane.columnIndex="1" />
-        <Label text="Port:" GridPane.rowIndex="1">
+        <TextField fx:id="tfServerHost" editable="false" promptText="Please enter server host address" text="localhost"
+                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Port:" GridPane.rowIndex="2">
             <padding>
                 <Insets right="10.0" />
             </padding>
         </Label>
-        <TextField fx:id="tfServerPort" promptText="Please enter the TicTacToe server port" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TitledPane collapsible="false" prefHeight="9000.0" prefWidth="9000.0" text="Database Settings:" GridPane.columnSpan="2" GridPane.rowIndex="2">
+        <TextField fx:id="tfServerPort" promptText="Please enter the TicTacToe server port" GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+        <TitledPane collapsible="false" prefHeight="9000.0" prefWidth="9000.0" text="Database Settings:"
+                    GridPane.columnSpan="2" GridPane.rowIndex="3">
             <content>
                 <GridPane>
                     <columnConstraints>
@@ -86,10 +92,17 @@
                 </GridPane>
             </content>
         </TitledPane>
-        <Button fx:id="btnHostServer" mnemonicParsing="false" text="Host Server" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+        <Button fx:id="btnHostServer" mnemonicParsing="false" text="Host Server" GridPane.columnSpan="2"
+                GridPane.halignment="CENTER" GridPane.rowIndex="4">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </Button>
+        <Label text="Server Name:">
+            <padding>
+                <Insets right="10.0"/>
+            </padding>
+        </Label>
+        <TextField fx:id="tfServerName" promptText="Please enter TicTacToe server name" GridPane.columnIndex="1"/>
     </children>
 </GridPane>
