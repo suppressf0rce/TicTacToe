@@ -98,7 +98,7 @@ public class DBBroker {
      * @see #openConnection()
      * @see #closeConnection()
      */
-    public void executeUpdate(String query) {
+    public boolean executeUpdate(String query) {
         try {
             connection.setAutoCommit(false);
 
@@ -107,14 +107,17 @@ public class DBBroker {
             statement.executeUpdate(query);
 
             connection.commit();
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Could not execute query: " + e.getMessage());
             lastException = e;
             try {
                 connection.rollback();
+                return false;
             } catch (SQLException e1) {
                 e1.printStackTrace();
+                return false;
             }
         }
     }

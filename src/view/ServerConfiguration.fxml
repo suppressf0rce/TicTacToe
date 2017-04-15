@@ -92,8 +92,8 @@
                 </GridPane>
             </content>
         </TitledPane>
-        <Button fx:id="btnHostServer" mnemonicParsing="false" text="Host Server" GridPane.columnSpan="2"
-                GridPane.halignment="CENTER" GridPane.rowIndex="4">
+        <Button fx:id="btnHostServer" mnemonicParsing="false" onAction="#hostServerAction" text="Host Server"
+                GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
