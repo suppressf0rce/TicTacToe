@@ -1,5 +1,6 @@
 package model;
 
+import control.EchoThread;
 import control.database.DBBroker;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -13,10 +14,8 @@ import view.Window;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.ArrayList;
 
 /**
  * This class represents TicTacToe Server, <br>
@@ -61,6 +60,11 @@ public class Server {
      */
     private Window window;
 
+    /**
+     * an ArrayList of active Threads
+     */
+    private ArrayList<EchoThread> activeThreads;
+
 
     //Constructor
     //------------------------------------------------------------------------------------------------------------------
@@ -68,6 +72,7 @@ public class Server {
         this.name = name;
         this.port = port;
         this.broker = broker;
+        activeThreads = new ArrayList<>();
         try {
             this.address = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
@@ -76,10 +81,17 @@ public class Server {
 
         window = new Window("TicTacToe Server: [" + name + "]", false);
         window.setFXML(getClass().getResource("/view/ServerGUI.fxml"));
+        window.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
         window.show();
 
         try {
+            System.out.println("Starting TicTacToe Server on port: " + port);
             serverSocket = new ServerSocket(port);
+
+            System.out.println("Server is running...");
         } catch (IOException e) {
             //Show user error message
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -125,5 +137,36 @@ public class Server {
             alert.showAndWait();
             Platform.exit();
         }
+
+
+        //Code for accepting connections
+        //Infinity loop - accepting connection until server is closed
+        Thread serverThread = new Thread(() -> {
+            while (true) {
+                Socket socket;
+                try {
+                    socket = serverSocket.accept();
+                    System.out.println("Client: " + socket.getInetAddress() + " connected to the server");
+                    EchoThread thread = new EchoThread(socket, broker, this);
+                    thread.start();
+                    activeThreads.add(thread);
+                } catch (IOException e) {
+                    System.out.println("I/O Exception: " + e.getMessage());
+                }
+
+            }
+        });
+        serverThread.start();
+    }
+
+
+    //Getters & Setters
+    //------------------------------------------------------------------------------------------------------------------
+    public ArrayList<EchoThread> getActiveThreads() {
+        return activeThreads;
+    }
+
+    public String getName() {
+        return name;
     }
 }

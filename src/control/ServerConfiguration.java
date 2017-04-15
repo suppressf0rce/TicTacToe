@@ -1,24 +1,19 @@
 package control;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import control.database.DBBroker;
-import control.database.TextFieldErrorFocusListener;
+import control.database.TextFieldNumberListener;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import model.Server;
-import view.Window;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * This class is control class for the ServerConfiguration.fxml<br>
@@ -81,20 +76,8 @@ public class ServerConfiguration {
         tfUsername.focusedProperty().addListener(new TextFieldErrorFocusListener(tfUsername));
 
         //Allow only numeric inputs for the port
-        tfServerPort.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue.matches("\\d*")) {
-                    try {
-                        int value = Integer.parseInt(newValue);
-                    } catch (NumberFormatException e) {
-                        //Ignore
-                    }
-                } else {
-                    tfServerPort.setText(oldValue);
-                }
-            }
-        });
+        tfServerPort.textProperty().addListener(new TextFieldNumberListener(tfServerPort));
+        tfDatabasePort.textProperty().addListener(new TextFieldNumberListener(tfDatabasePort));
     }
     /**
      * This methods manages the test database connection action on the button
