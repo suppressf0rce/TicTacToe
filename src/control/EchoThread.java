@@ -110,7 +110,7 @@ public class EchoThread extends Thread {
 
         if (object.get("requestType").getAsString().equals("login")) {
             broker.openConnection();
-            ResultSet result = broker.getData("SELECT * FROM main WHERE username = '" + object.get("username").getAsString() + "' AND password = '" + object.get("password").getAsString() + "'");
+            ResultSet result = broker.getData("SELECT * FROM main WHERE username = '" + object.get("username").getAsString() + "' AND password = '" + AES.encrypt(object.get("password").getAsString()) + "'");
             try {
                 if (result.next()) {
                     loggedIn = true;
