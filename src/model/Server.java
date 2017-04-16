@@ -1,6 +1,7 @@
 package model;
 
 import control.EchoThread;
+import control.ServerMaintainer;
 import control.database.DBBroker;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -138,6 +139,9 @@ public class Server {
             Platform.exit();
         }
 
+        //Installing server maintainer
+        ServerMaintainer maintainer = new ServerMaintainer(this);
+        maintainer.start();
 
         //Code for accepting connections
         //Infinity loop - accepting connection until server is closed

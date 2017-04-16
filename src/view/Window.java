@@ -21,6 +21,11 @@ import java.net.URL;
 public class Window extends Stage {
 
     /**
+     * Reference to the control class;
+     */
+    private Object control;
+
+    /**
      * Constructor for the window that creates and initializes the window<br>
      * <b><i>Example code:</i></b><br>
      * <p>
@@ -95,6 +100,9 @@ public class Window extends Stage {
             //Load from fxml
             Parent root = loader.load();
 
+            //Get reference to the control
+            control = loader.getController();
+
             //Create scene
             setScene(new Scene(root));
 
@@ -105,4 +113,7 @@ public class Window extends Stage {
         }
     }
 
+    public Object getControler() {
+        return control;
+    }
 }

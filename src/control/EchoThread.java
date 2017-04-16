@@ -5,15 +5,13 @@ import com.google.gson.JsonParser;
 import control.database.DBBroker;
 import jdk.nashorn.internal.parser.JSONParser;
 import main.AES;
-import model.ClientStatus;
-import model.LoginRequest;
-import model.RegisterRequest;
-import model.Server;
+import model.*;
 
 import java.io.*;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * This thread represents every socket / client that is connected to the server.
@@ -95,8 +93,14 @@ public class EchoThread extends Thread {
 
 
         } catch (Exception e) {
+            try {
+                socket.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             System.out.println("Client: " + socket.getInetAddress() + " disconnected from the server");
             server.getActiveThreads().remove(this);
+            interrupt();
         }
     }
 
@@ -104,6 +108,41 @@ public class EchoThread extends Thread {
         String line = in_socket.readLine();
         if (line != null) {
             line = AES.decrypt(line);
+            JsonObject object = (JsonObject) parser.parse(line);
+            if (object.get("requestType").getAsString().equals("refresh")) {
+                RefreshRequest request = new RefreshRequest();
+
+                //ArrayList of the top 10 players
+                try {
+                    broker.openConnection();
+                    ResultSet result = broker.getData("SELECT * FROM main ORDER BY numOfWins DESC LIMIT 10");
+                    ArrayList<Player> top10 = new ArrayList<>();
+                    while (result.next()) {
+                        Player player = new Player();
+                        player.setNickname(result.getString("nickname"));
+                        player.setNumOfWins(result.getInt("numOfWins"));
+                        top10.add(player);
+                    }
+                    request.setTop10List(top10);
+                    broker.closeConnection();
+                } catch (SQLException e) {
+                    broker.closeConnection();
+                }
+
+                //Get online players
+                ArrayList<Player> onlinePlayers = new ArrayList<>();
+                for (EchoThread client : server.getActiveThreads()) {
+                    if (client.isLoggedIn()) {
+                        Player player = new Player();
+                        player.setNickname(client.getNickName());
+                        player.setStatus(client.getClientStatus());
+                        onlinePlayers.add(player);
+                    }
+                }
+                request.setOnlinePlayers(onlinePlayers);
+
+                out_socket.println(request.get());
+            }
         }
     }
 
@@ -172,5 +211,9 @@ public class EchoThread extends Thread {
 
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 }

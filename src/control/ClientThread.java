@@ -72,7 +72,7 @@ public class ClientThread extends Thread {
                 showLogin(in_socket, out_socket);
             }
 
-            socket.close();
+            //socket.close();
 
         } catch (Exception e) {
             interrupt();
@@ -87,36 +87,43 @@ public class ClientThread extends Thread {
      * @throws Exception Exception in the sockets
      */
     private void showLogin(BufferedReader brinp, PrintWriter out_socket) throws Exception {
-        System.out.println("cekam poruku od servera");
         String line = brinp.readLine();
-        System.out.println("starting decrypt");
         line = AES.decrypt(line);
-        System.out.println("Decrypted");
         JsonObject object = (JsonObject) parser.parse(line);
-        System.out.println("testing for request type");
         if (object.get("requestType").getAsString().equals("login")) {
-            System.out.println("Cehcking for login");
             if (object.has("isLoggedIn")) {
                 isLoggedIn = object.get("isLoggedIn").getAsBoolean();
-                System.out.println("Logged in status: " + isLoggedIn);
+                ;
             }
 
             if (!isLoggedIn) {
-                System.out.println("showing dialog");
+                ;
                 // Create the custom dialog.
                 showLoginDialog(object, out_socket);
             } else {
                 Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText(null);
-                    alert.setContentText(object.get("serverText").getAsString());
-                    alert.showAndWait();
-                    //TODO: show lobby gui
+                    view.Window lobby = new view.Window("TicTacToe - Lobby", false);
+                    lobby.setFXML(getClass().getResource("/view/Lobby.fxml"));
+                    lobby.setOnCloseRequest(event -> {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Platform.exit();
+                        System.exit(0);
+                    });
+                    Lobby lobyControl = (Lobby) lobby.getControler();
+                    lobyControl.setIn_socket(brinp);
+                    lobyControl.setOut_socket(out_socket);
+                    lobyControl.setSocket(socket);
+                    lobby.show();
+                    lobyControl.startLobby();
+
                     window.hide();
                 });
             }
         } else if (object.get("requestType").getAsString().equals("register")) {
-            System.out.println("Checking for successful registration");
             if (object.get("successful").getAsBoolean()) {
                 showLoginDialog(object, out_socket);
             } else {
@@ -207,7 +214,6 @@ public class ClientThread extends Thread {
 
             result.ifPresent(usernamePassword -> {
                 if (!usernamePassword.getKey().isEmpty() && !usernamePassword.getValue().isEmpty()) {
-                    System.out.println("Sending info to the server");
                     sendLoginInfo(usernamePassword.getKey(), usernamePassword.getValue(), out_socket);
                 }
             });
@@ -308,12 +314,12 @@ public class ClientThread extends Thread {
                     return new Pair<>(username.getText(), password.getText());
                 }
                 if (dialogButton == ButtonType.CANCEL) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    interrupt();
+//                    try {
+//                        socket.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    interrupt();
                 }
                 return null;
             });
@@ -321,7 +327,7 @@ public class ClientThread extends Thread {
             Optional<Pair<String, String>> result = dialog.showAndWait();
 
             result.ifPresent(usernamePassword -> {
-                System.out.println("Sending register info to the server");
+                ;
                 sendRegisterInfo(usernamePassword.getKey(), usernamePassword.getValue(), nickname.getText(), out_socket);
             });
         });
