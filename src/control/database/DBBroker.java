@@ -65,7 +65,7 @@ public class DBBroker {
      * @see #openConnection();
      * @see #closeConnection()
      */
-    public ResultSet getData(String query) {
+    public ResultSet getData(String query) throws SQLException {
         try {
 
             connection.setAutoCommit(false);
@@ -83,10 +83,12 @@ public class DBBroker {
                 connection.rollback();
             } catch (SQLException e1) {
                 e1.printStackTrace();
+                throw e1;
             }
+            throw e;
         }
 
-        return null;
+        //return null;
     }
 
     /**

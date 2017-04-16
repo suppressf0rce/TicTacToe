@@ -7,6 +7,7 @@ import jdk.nashorn.internal.parser.JSONParser;
 import main.AES;
 import model.ClientStatus;
 import model.LoginRequest;
+import model.RegisterRequest;
 import model.Server;
 
 import java.io.*;
@@ -88,10 +89,21 @@ public class EchoThread extends Thread {
                 processLoginRequest(in_socket, out_socket);
             }
 
+            while (true) {
+                processRequest(in_socket, out_socket);
+            }
 
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             System.out.println("Client: " + socket.getInetAddress() + " disconnected from the server");
             server.getActiveThreads().remove(this);
+        }
+    }
+
+    private void processRequest(BufferedReader in_socket, PrintWriter out_socket) throws IOException {
+        String line = in_socket.readLine();
+        if (line != null) {
+            line = AES.decrypt(line);
         }
     }
 
@@ -102,7 +114,7 @@ public class EchoThread extends Thread {
         out.println(loginRequest.get());
     }
 
-    private void processLoginRequest(BufferedReader in_socket, PrintWriter out) throws IOException {
+    private void processLoginRequest(BufferedReader in_socket, PrintWriter out) throws Exception {
         System.out.println("Processing login request from client: " + socket.getInetAddress());
         String line = in_socket.readLine();
         line = AES.decrypt(line);
@@ -125,8 +137,25 @@ public class EchoThread extends Thread {
                     System.out.println("Wrong user name and password for client: " + socket.getInetAddress());
                     sendLoginRequest(out, "Wrong username or password for " + server.getName() + "!\nPlease try again.");
                 }
+                broker.closeConnection();
             } catch (SQLException e) {
                 e.printStackTrace();
+                broker.closeConnection();
+            }
+        } else if (object.get("requestType").getAsString().equals("register")) {
+            broker.openConnection();
+            if (broker.executeUpdate("INSERT INTO main(username,password,nickname,numOfWins) VALUES('" + object.get("username").getAsString() + "', '" + AES.encrypt(object.get("password").getAsString()) + "','" + object.get("nickname").getAsString() + "',0)")) {
+                System.out.println("Successfully registered user: " + object.get("nickname").getAsString());
+                RegisterRequest request = new RegisterRequest();
+                request.setServerText("Congratulations you have successfully created account on the " + server.getName() + "\nYou can now login to enter the lobby!");
+                request.setSuccessful(true);
+                out.println(request.get());
+            } else {
+                System.out.println("Failed to create user for the client: " + socket.getInetAddress());
+                RegisterRequest request = new RegisterRequest();
+                request.setServerText("Failed to register user " + broker.getLastException().getMessage() + "\n Please try again");
+                request.setSuccessful(false);
+                out.println(request.get());
             }
         }
     }
